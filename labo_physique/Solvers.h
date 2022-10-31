@@ -49,51 +49,19 @@ namespace gti320
         // TODO 
         //
         // Implémenter la méthode de Gauss-Seidel
-        /*% GTI320 Programmation mathematique
-        % Resoudre Ax = b en utilisant l'algorithme de Gauss-Seidel
-        %
-        %A = matrice du systeme lineaire
-        % b = vecteur cote droit
-        % x0 = estimation initiale
-        % kmax = iterations maximales
-        %
-        %x = le vecteur solution
-        % r = le residu
-        %
-        function[x, r] = gs(A, b, x0, kmax)
-
-            n = size(A, 2);
-            r = zeros(kmax, 1);
-            x = x0;
-            for k = 1:kmax
-                for i = 1 : n
-                    x(i) = b(i);
-                    for j = 1:i - 1
-                        x(i) = x(i) - A(i, j) * x(j);
-                    end
-                    for j = i + 1:n
-                        x(i) = x(i) - A(i, j) * x(j);
-                    end
-                    x(i) = x(i) / A(i, i);
-                end
-                r(k) = norm(A * x - b);
-            end
-        end*/
-
-        int n = A.rows();
 
         for(int k = 0; k < k_max; k++)
         {
             auto x_prec = x;
 
-            for (int i = 0; i < n; i++) 
+            for (int i = 0; i < A.rows(); i++)
             {
                 x(i) = b(i);
                 for (int j = 0; i < i - 1; j++) 
                 {
                     x(i) = x(i) - A(i, j) * x(j);
                 }
-                for (int j = i + 1; j < n; j++) 
+                for (int j = i + 1; j < A.rows(); j++)
                 {
                     x(i) = x(i) - A(i, j) * x(j);
                 }

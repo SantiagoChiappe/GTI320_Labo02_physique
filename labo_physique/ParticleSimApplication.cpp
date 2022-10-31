@@ -552,7 +552,7 @@ void ParticleSimApplication::step(float dt)
     }
 
     const Matrix<float, Dynamic, Dynamic> A = m_M + (-(dt * dt) * m_dfdx);
-    const Vector<float, Dynamic> b = dt * (Mg + m_f) + m_v;
+    const Vector<float, Dynamic> b = dt * m_f + m_M * m_v;
 
     // Résolution du système d'équations  `A*v_plus = b`.
     //

@@ -101,10 +101,6 @@ namespace gti320
          */
         void computeForces();
 
-        Matrix<float, 4, 4> RMatrixCalc(float alpha);
-
-        Vector<float, 4> XVector(Vector<float, 2> xi, Vector<float, 2> xj);
-
         /**
          * Accesseurs pour les particules et les ressorts
          */
@@ -154,11 +150,7 @@ namespace gti320
 
         Matrix<float, 2, 2> MRigid(const bool positive, const Particle& p1, const Particle& p2, const Spring& spring);
 
-        Matrix<float, 2, 1, 1> VectorSubstraction(const Vector<float, 2>& a, const Vector<float, 2>& b);
-
         float CalculAlpha(const Vector<float, 2>& diffPosParticles, const Spring& spring);
-
-        float CalculAlpha(const Matrix<float, 2, 1, 1>& diffPosParticles, const Spring& spring);
 
     };
 }

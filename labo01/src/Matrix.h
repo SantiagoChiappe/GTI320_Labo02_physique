@@ -152,37 +152,6 @@ namespace gti320 {
                 (*this)(i, i) = (_Scalar)value;
             }
         }
-
-        /*
-        // Retourne la norme euclidienne du vecteur
-        inline _Scalar norm() const
-        {
-            assert(this->size() > 0 && (this->rows() > 0 && this->cols() == 1) && (this->rows() == 1 && this->cols() > 0));
-            return sqrt(this->dot(*this));
-        }
-
-        // Produit scalaire de *this et other
-        inline _Scalar dot(const Matrix& other) const
-        {
-            assert(this->size() == other.size() && this->size() > 0 && (this->rows() > 0 && this->cols() == 1) && (this->rows() == 1 && this->cols() > 0));
-            assert(this->rows() == other.rows() && this->cols() == other.cols());
-            _Scalar dot = 0;
-            if (this->rows() > this->cols()) 
-            {
-                for (int i = 0; i < this->size(); i++)
-                {
-                    dot += (*this)(i, 0) * other(i, 0);
-                }
-            }
-            else 
-            {
-                for (int i = 0; i < this->size(); i++)
-                {
-                    dot += (*this)(0, i) * other(0, i);
-                }
-            }
-            return dot;
-        }*/
     };
 
     /** Classe Matrix spécialisée pour un stockage par lignes */
@@ -311,36 +280,6 @@ namespace gti320 {
                 (*this)(i, i) = (_Scalar)value;
             }
         }
-
-        /*// Retourne la norme euclidienne du vecteur
-        inline _Scalar norm() const
-        {
-            assert(this->size() > 0 && (this->rows() > 0 && this->cols() == 1) && (this->rows() == 1 && this->cols() > 0));
-            return sqrt(this->dot(*this));
-        }
-
-        // Produit scalaire de *this et other 
-        inline _Scalar dot(const Matrix& other) const
-        {
-            assert(this->size() == other.size() && this->size() > 0 && (this->rows() > 0 && this->cols() == 1) && (this->rows() == 1 && this->cols() > 0));
-            assert(this->rows() == other.rows() && this->cols() == other.cols());
-            _Scalar dot = 0;
-            if (this->rows() > this->cols())
-            {
-                for (int i = 0; i < this->size(); i++)
-                {
-                    dot += (*this)(i, 0) * other(i, 0);
-                }
-            }
-            else
-            {
-                for (int i = 0; i < this->size(); i++)
-                {
-                    dot += (*this)(0, i) * other(0, i);
-                }
-            }
-            return dot;
-        }*/
     };
 
     /**
