@@ -68,8 +68,7 @@ namespace gti320 {
             {
                 for (int i = 0; i < this->rows(); i++)
                 {
-                    auto value = submatrix(i, j);
-                    (*this)(i, j) = (_Scalar)value;
+                    (*this)(i, j) = (_Scalar)submatrix(i, j);
                 }
             }
             return *this;
@@ -120,8 +119,7 @@ namespace gti320 {
             {
                 for (int i = 0; i < this->rows(); i++)
                 {
-                    auto value = (*this)(i, j);
-                    transpose(j, i) = (_Scalar)value;
+                    transpose(j, i) = (_Scalar)(*this)(i, j);
                 }
             }
             return transpose;
@@ -143,6 +141,48 @@ namespace gti320 {
                 (*this)(i, i) = (_Scalar)1;
             }
         }
+
+        /** Retourne une matrice avec des données sur la diagonale */
+        template<typename _OtherScalar>
+        inline void diagonalValue(_OtherScalar value)
+        {
+            assert(this->cols() > 0 && this->rows() > 0);
+            for (int i = 0; i < this->rows(); i++)
+            {
+                (*this)(i, i) = (_Scalar)value;
+            }
+        }
+
+        /*
+        // Retourne la norme euclidienne du vecteur
+        inline _Scalar norm() const
+        {
+            assert(this->size() > 0 && (this->rows() > 0 && this->cols() == 1) && (this->rows() == 1 && this->cols() > 0));
+            return sqrt(this->dot(*this));
+        }
+
+        // Produit scalaire de *this et other
+        inline _Scalar dot(const Matrix& other) const
+        {
+            assert(this->size() == other.size() && this->size() > 0 && (this->rows() > 0 && this->cols() == 1) && (this->rows() == 1 && this->cols() > 0));
+            assert(this->rows() == other.rows() && this->cols() == other.cols());
+            _Scalar dot = 0;
+            if (this->rows() > this->cols()) 
+            {
+                for (int i = 0; i < this->size(); i++)
+                {
+                    dot += (*this)(i, 0) * other(i, 0);
+                }
+            }
+            else 
+            {
+                for (int i = 0; i < this->size(); i++)
+                {
+                    dot += (*this)(0, i) * other(0, i);
+                }
+            }
+            return dot;
+        }*/
     };
 
     /** Classe Matrix spécialisée pour un stockage par lignes */
@@ -187,8 +227,7 @@ namespace gti320 {
             {
                 for (int j = 0; j < this->cols(); j++)
                 {
-                    auto value = submatrix(i, j);
-                    (*this)(i, j) = (_Scalar)value;
+                    (*this)(i, j) = (_Scalar)submatrix(i, j);
                 }
             }
             return *this;
@@ -239,8 +278,7 @@ namespace gti320 {
             {
                 for (int j = 0; j < this->cols(); j++)
                 {
-                    auto value = (*this)(i, j);
-                    transpose(j, i) = (_Scalar)value;
+                    transpose(j, i) = (_Scalar)(*this)(i, j);
                 }
             }
             return transpose;
@@ -262,6 +300,47 @@ namespace gti320 {
                 (*this)(i, i) = (_Scalar)1;
             }
         }
+
+        /** Retourne une matrice avec des données sur la diagonale */
+        template<typename _OtherScalar>
+        inline void diagonalValue(_OtherScalar value)
+        {
+            assert(this->cols() > 0 && this->rows() > 0);
+            for (int i = 0; i < this->rows(); i++)
+            {
+                (*this)(i, i) = (_Scalar)value;
+            }
+        }
+
+        /*// Retourne la norme euclidienne du vecteur
+        inline _Scalar norm() const
+        {
+            assert(this->size() > 0 && (this->rows() > 0 && this->cols() == 1) && (this->rows() == 1 && this->cols() > 0));
+            return sqrt(this->dot(*this));
+        }
+
+        // Produit scalaire de *this et other 
+        inline _Scalar dot(const Matrix& other) const
+        {
+            assert(this->size() == other.size() && this->size() > 0 && (this->rows() > 0 && this->cols() == 1) && (this->rows() == 1 && this->cols() > 0));
+            assert(this->rows() == other.rows() && this->cols() == other.cols());
+            _Scalar dot = 0;
+            if (this->rows() > this->cols())
+            {
+                for (int i = 0; i < this->size(); i++)
+                {
+                    dot += (*this)(i, 0) * other(i, 0);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < this->size(); i++)
+                {
+                    dot += (*this)(0, i) * other(0, i);
+                }
+            }
+            return dot;
+        }*/
     };
 
     /**
@@ -394,6 +473,17 @@ namespace gti320 {
             for (int i = 0; i < this->rows(); i++)
             {
                 (*this)(i, i) = (_Scalar)value;
+            }
+        }
+
+        /** Retourne une matrice avec des données sur la diagonale */
+        template<typename _OtherScalar>
+        inline void sumDiagonalValue(_OtherScalar value)
+        {
+            assert(this->cols() > 0 && this->rows() > 0);
+            for (int i = 0; i < this->rows(); i++)
+            {
+                (*this)(i, i) += (_Scalar)value;
             }
         }
 

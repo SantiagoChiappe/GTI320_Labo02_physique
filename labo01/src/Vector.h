@@ -48,6 +48,7 @@ namespace gti320 {
         _Scalar operator()(int i) const
         {
             /** TODO: Implémenter. */
+            assert(i >= 0 && i < this->size());
             return this->data()[i];
         }
 
@@ -55,6 +56,7 @@ namespace gti320 {
         _Scalar& operator()(int i)
         {
             /** TODO: Implémenter. */
+            assert(i >= 0 && i < this->size());
             return this->m_storage.data()[i];
         }
 
@@ -82,12 +84,7 @@ namespace gti320 {
         {
             /** TODO: Implémenter. */
             assert(this->size() > 0);
-            _Scalar norm = 0;
-            for (int i = 0; i < this->size(); i++)
-            {
-                norm += pow((*this)(i), 2);
-            }
-            return sqrt(norm);
+            return sqrt(this->dot(*this));
         }
     };
 } // namespace gti320

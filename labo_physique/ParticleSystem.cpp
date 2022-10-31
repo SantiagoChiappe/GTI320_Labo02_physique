@@ -35,49 +35,13 @@ void ParticleSystem::computeForces()
         Particle& p2 = m_particles[s.index1];
 
         Vector<float, 2> diffPosParticles = p2.x - p1.x;
-        float alpha = s.k * (1 - (s.l0 / diffPosParticles.norm()));
+        float alpha = this->CalculAlpha(diffPosParticles, s);
         Vector<float, 2> f1 = alpha * diffPosParticles;
 
         p1.f = p1.f + f1;
         p2.f = p2.f - f1;
-
-        /*float alpha = s.k * (1 - (s.l0 / (abs(p1.x(1) - p2.x(1)))));
-        Matrix<float, 4, 4> R = RMatrixCalc(alpha);
-        Vector<float, 4> X = XVector(p1.x, p2.x);
-        Vector<float, 4> Fr = R * X;
-        
-        p1.f(0) = Fr(0);
-        p1.f(1) += Fr(1);
-        p2.f(0) = Fr(2);
-        p2.f(1) += Fr(3);*/
     }
 }
-
-/*Matrix<float, 4, 4> ParticleSystem::RMatrixCalc(float alpha)
-{
-    Matrix<float, 4, 4> R = Matrix<float, 4, 4>();
-    auto submatrice1 = R.block(0, 0, 2, 2);
-    auto submatrice2 = R.block(2, 0, 2, 2);
-    auto submatrice3 = R.block(0, 2, 2, 2);
-    auto submatrice4 = R.block(2, 2, 2, 2);
-
-    submatrice1.diagonalValue(-alpha);
-    submatrice2.diagonalValue(alpha);
-    submatrice3.diagonalValue(alpha);
-    submatrice4.diagonalValue(-alpha);
-
-    return R;
-}
-
-Vector<float, 4> ParticleSystem::XVector(Vector<float, 2> xi, Vector<float, 2> xj) 
-{
-    Vector<float, 4> X = Vector<float, 4>();
-    X(0) = xi(0);
-    X(1) = xi(1);
-    X(2) = xj(0);
-    X(3) = xj(1);
-    return X;
-}*/
 
 /**
  * Assemble les données du système dans les vecteurs trois vecteurs d'état _pos,
@@ -198,6 +162,102 @@ void ParticleSystem::buildDfDx(Matrix<float, Dynamic, Dynamic>& dfdx)
         // Astuce: créer une matrice de taille fixe 2 par 2 puis utiliser la classe SubMatrix pour accumuler 
         // les modifications sur la diagonale (2 endroits) et pour mettre à jour les blocs non diagonale (2 endroits).
 
+        auto dfi = this->MRigid(true, m_particles[spring.index0], m_particles[spring.index1], spring);
+        auto dfj = this->MRigid(false, m_particles[spring.index0], m_particles[spring.index1], spring);
 
+        int pos1 = spring.index0 * 2;
+        int pos2 = spring.index1 * 2;
+
+        auto submatrice1 = dfdx.block(pos1, pos1, 2, 2);
+        auto submatrice2 = dfdx.block(pos2, pos1, 2, 2);
+        auto submatrice3 = dfdx.block(pos1, pos2, 2, 2);
+        auto submatrice4 = dfdx.block(pos2, pos2, 2, 2);
+
+        submatrice1 = dfi;
+        submatrice2 = dfi;
+        submatrice3 = dfj;
+        submatrice4 = dfj;
     }
 }
+
+Matrix<float, 2, 2> ParticleSystem::MRigid(const bool positive, const Particle& p1, const Particle& p2, const Spring& spring)
+{
+    Vector<float, 2> diffPosParticles = p2.x - p1.x;
+    float alpha = this->CalculAlpha(diffPosParticles, spring);
+
+    Matrix<float, 2, 2> MAlpha(2, 2);
+
+    auto otherCalc = spring.k * (spring.l0 / diffPosParticles.norm());
+
+    // produit dyadique
+    auto v = (1 / diffPosParticles.norm()) * diffPosParticles;
+    Matrix<float, 2, 2> prodDyadique = v * v;
+
+    if (positive) 
+    {
+        MAlpha.diagonalValue(alpha);
+        return MAlpha + otherCalc * prodDyadique;
+    }
+    else 
+    {
+        MAlpha.diagonalValue(-alpha);
+        return MAlpha + (-otherCalc * prodDyadique);
+    }
+}
+
+/*Matrix<float, 2, 1, 1> ParticleSystem::VectorSubstraction(const Vector<float, 2>& a, const Vector<float, 2>& b)
+{
+    assert(a.size() == b.size());
+    Matrix<float, 2, 1, 1> matrix (2, 1);
+    for (int i = 0; i < a.size(); i++)
+    {
+        matrix(i, 0) = a(i) - b(i);
+    }
+    return matrix;
+}*/
+
+float ParticleSystem::CalculAlpha(const Vector<float, 2>& diffPosParticles, const Spring& spring) 
+{
+    return spring.k * (1 - (spring.l0 / diffPosParticles.norm()));
+}
+
+/*float ParticleSystem::CalculAlpha(const Matrix<float, 2, 1, 1>& diffPosParticles, const Spring& spring)
+{
+    return spring.k * (1 - (spring.l0 / diffPosParticles.norm()));
+}*/
+
+/*float alpha = s.k * (1 - (s.l0 / (abs(p1.x(1) - p2.x(1)))));
+        Matrix<float, 4, 4> R = RMatrixCalc(alpha);
+        Vector<float, 4> X = XVector(p1.x, p2.x);
+        Vector<float, 4> Fr = R * X;
+
+        p1.f(0) = Fr(0);
+        p1.f(1) += Fr(1);
+        p2.f(0) = Fr(2);
+        p2.f(1) += Fr(3);*/
+
+/*Matrix<float, 4, 4> ParticleSystem::RMatrixCalc(float alpha)
+{
+    Matrix<float, 4, 4> R = Matrix<float, 4, 4>();
+    auto submatrice1 = R.block(0, 0, 2, 2);
+    auto submatrice2 = R.block(2, 0, 2, 2);
+    auto submatrice3 = R.block(0, 2, 2, 2);
+    auto submatrice4 = R.block(2, 2, 2, 2);
+
+    submatrice1.diagonalValue(-alpha);
+    submatrice2.diagonalValue(alpha);
+    submatrice3.diagonalValue(alpha);
+    submatrice4.diagonalValue(-alpha);
+
+    return R;
+}
+
+Vector<float, 4> ParticleSystem::XVector(Vector<float, 2> xi, Vector<float, 2> xj)
+{
+    Vector<float, 4> X = Vector<float, 4>();
+    X(0) = xi(0);
+    X(1) = xi(1);
+    X(2) = xj(0);
+    X(3) = xj(1);
+    return X;
+}*/

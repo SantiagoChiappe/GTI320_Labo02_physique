@@ -115,6 +115,7 @@ namespace gti320 {
              * - Allouer un tampon pour stocker _size éléments de type _Scalar sur le tas.
              * - Initialiser ce tampon à zéro.
              */
+            assert(_size > 0);
             m_data = new _Scalar[m_size];
             memset(m_data, 0, sizeof(_Scalar) * m_size);
         }
@@ -138,9 +139,8 @@ namespace gti320 {
         {
             /** TODO: Implémenter. */
             if (this != &other) {
-                delete[] m_data;
-                m_size = other.m_size;
-                m_data = new _Scalar[m_size];
+                assert(other.m_size > 0);
+                resize(other.m_size);
                 memcpy(m_data, other.m_data, sizeof(_Scalar) * m_size);
             }
             return *this;

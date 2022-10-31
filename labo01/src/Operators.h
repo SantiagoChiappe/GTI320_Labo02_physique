@@ -49,21 +49,11 @@ namespace gti320 {
         /** TODO: Implémenter. */
         assert(A.cols() == B.rows());
         Matrix<_Scalar, Dynamic, Dynamic> matrice = Matrix<_Scalar, Dynamic, Dynamic>(A.rows(), B.cols());
-        /*for (int i = 0; i < B.rows(); i++)
-        {
-            for (int j = 0; j < B.cols(); j++)
-            {
-                for (int k = 0; k < A.rows(); k++)
-                {
-                    matrice(k, j) += A(k, i) * B(i, j);
-                }
-            }
-        }*/
         for (int k = 0; k < A.cols(); k++)
         {
-            for (int i = 0; i < A.rows(); i++)
+            for (int j = 0; j < B.rows(); j++)
             {
-                for (int j = 0; j < B.rows(); j++)
+                for (int i = 0; i < A.rows(); i++)
                 {
                     matrice(i, j) += A(i, k) * B(k, j);
                 }
@@ -287,5 +277,21 @@ namespace gti320 {
             vector(i) = a(i) - b(i);
         }
         return vector;
+    }
+
+    /** Multiplication : Vecteur * Vecteur (produit dyadique) */
+    template<typename _Scalar, int _Rows>
+    Matrix<_Scalar, _Rows, _Rows> operator*(const Vector<_Scalar, _Rows>& v1, const Vector<_Scalar, _Rows>& v2)
+    {
+        assert(v1.size() > 0 && v2.size() > 0 && v1.size() == v2.size());
+        Matrix<_Scalar, _Rows, _Rows> matrix = Matrix<_Scalar, _Rows, _Rows>(v1.size(), v1.size());
+        for (int j = 0; j < v1.size(); j++)
+        {
+            for (int i = 0; i < v1.size(); i++)
+            {
+                matrix(i, j) += v1(i) * v1(j);
+            }
+        }
+        return matrix;
     }
 } // namespace gti320

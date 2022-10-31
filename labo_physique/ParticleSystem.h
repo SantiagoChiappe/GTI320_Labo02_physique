@@ -152,5 +152,13 @@ namespace gti320
          */
         void buildDfDx(Matrix<float, Dynamic, Dynamic>& dfdx);
 
+        Matrix<float, 2, 2> MRigid(const bool positive, const Particle& p1, const Particle& p2, const Spring& spring);
+
+        Matrix<float, 2, 1, 1> VectorSubstraction(const Vector<float, 2>& a, const Vector<float, 2>& b);
+
+        float CalculAlpha(const Vector<float, 2>& diffPosParticles, const Spring& spring);
+
+        float CalculAlpha(const Matrix<float, 2, 1, 1>& diffPosParticles, const Spring& spring);
+
     };
 }
