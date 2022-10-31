@@ -23,6 +23,22 @@ namespace gti320
     static const float eps = 1e-4f;
     static const float tau = 1e-5f;
 
+    static bool testConvergence(const Matrix<float, Dynamic, Dynamic>& A,
+        const Vector<float, Dynamic>& b,
+        Vector<float, Dynamic>& x, Vector<float, Dynamic>& x_prec)
+    {
+        if ((A * x - b).norm() / b.norm() < eps)
+        {
+            return false;
+        }
+        auto deltaX = x - x_prec;
+        if (deltaX.norm() / x.norm() < tau)
+        {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Résout Ax = b avec la méthode Gauss-Seidel
      */
@@ -33,7 +49,64 @@ namespace gti320
         // TODO 
         //
         // Implémenter la méthode de Gauss-Seidel
+        /*% GTI320 Programmation mathematique
+        % Resoudre Ax = b en utilisant l'algorithme de Gauss-Seidel
+        %
+        %A = matrice du systeme lineaire
+        % b = vecteur cote droit
+        % x0 = estimation initiale
+        % kmax = iterations maximales
+        %
+        %x = le vecteur solution
+        % r = le residu
+        %
+        function[x, r] = gs(A, b, x0, kmax)
+
+            n = size(A, 2);
+            r = zeros(kmax, 1);
+            x = x0;
+            for k = 1:kmax
+                for i = 1 : n
+                    x(i) = b(i);
+                    for j = 1:i - 1
+                        x(i) = x(i) - A(i, j) * x(j);
+                    end
+                    for j = i + 1:n
+                        x(i) = x(i) - A(i, j) * x(j);
+                    end
+                    x(i) = x(i) / A(i, i);
+                end
+                r(k) = norm(A * x - b);
+            end
+        end*/
+
+        int n = A.rows();
+
+        for(int k = 0; k < k_max; k++)
+        {
+            auto x_prec = x;
+
+            for (int i = 0; i < n; i++) 
+            {
+                x(i) = b(i);
+                for (int j = 0; i < i - 1; j++) 
+                {
+                    x(i) = x(i) - A(i, j) * x(j);
+                }
+                for (int j = i + 1; j < n; j++) 
+                {
+                    x(i) = x(i) - A(i, j) * x(j);
+                }
+                x(i) = x(i) / A(i, i);
+            }
+
+            if (!testConvergence(A, b, x, x_prec))
+            {
+                return;
+            }
+        }
     }
+    
 
     /**
 
