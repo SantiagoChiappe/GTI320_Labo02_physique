@@ -57,7 +57,7 @@ namespace gti320
             for (int i = 0; i < A.rows(); i++)
             {
                 x(i) = b(i);
-                for (int j = 0; i < i - 1; j++) 
+                for (int j = 0; j < i - 1; j++) 
                 {
                     x(i) = x(i) - A(i, j) * x(j);
                 }
