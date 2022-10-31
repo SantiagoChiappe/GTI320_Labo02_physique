@@ -100,13 +100,45 @@ namespace gti320
         //
         // Calculer la matrice L de la factorisation de Cholesky
 
+        Matrix<float, Dynamic, Dynamic> L(A.rows(), A.cols());
+        L.setZero();
 
+        for (int i = 0; i < A.rows(); i++) 
+        {
+            for (int k = 0; k <= i; k++) 
+            {
+                int s = 0;
+                for (int j = 0; j < k; j++) 
+                {
+                    s = s + L(i, j) * L(k, j);
+                }
+                if (i == k) 
+                {
+                    L(i, k) = sqrt(A(i, i) - s);
+                }
+                else 
+                {
+                    L(i, k) = (A(i, k) - s) / L(k, k);
+                }
+            }
+        }
+
+        Vector<float, Dynamic> y(A.rows());
+        y.setZero();
 
         // TODO
         //
         // Résoudre Ly = b
 
-
+        for (int i = 0; i < A.rows(); i++) 
+        {
+            y(i) = b(i);
+            for (int j = 0; j < i; j++) 
+            {
+                y(i) = y(i) - L(i, j) * y(j);
+            }
+            y(i) = y(i) / L(i, i);
+        }
 
         // TODO
         //
@@ -115,8 +147,15 @@ namespace gti320
         // Remarque : ne pas caculer la transposer de L, c'est inutilement
         // coûteux.
 
-
-
+        for (int i = 0; i < A.rows(); i++) 
+        {
+            x(i) = y(i);
+            for (int j = i + 1; j < A.rows(); j++) 
+            {
+                x(i) = x(i) - L(j, i) * x(j);
+            }
+            x(i) = x(i) / L(i, i);
+        }
     }
 
 }
