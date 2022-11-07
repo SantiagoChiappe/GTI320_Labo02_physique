@@ -6,9 +6,9 @@
  * @brief Implémentation de plusieurs algorihtmes de solveurs pour un système
  *        d'équations linéaires
  *
- * Nom:
- * Code permanent :
- * Email :
+ * Nom: Erick Santiago Chiappe Reyes
+ * Code permanent : CHIE19079806
+ * Email : erick-santiago.chiappe-reyes.1@ens.etsmtl.ca
  *
  */
 
@@ -86,7 +86,31 @@ namespace gti320
         //
         // Implémenter la méthode de Gauss-Seidel avec coloration de graphe.
         // Les partitions avec l'index de chaque particule sont stockées dans la table des tables, P.
+        
+        for (int c = 0; c < P.size(); ++c) 
+        {
+            const std::vector<int>& inds = P[c];
+            #pragma omp parallel for 
+            for (int k = 0; k < inds.size(); ++k)
+            {
+                // iteration de Gauss-Seidel
 
+                for (int ii = 0; ii < 2; ii++) 
+                {
+                    int i = inds[k] * 2 + ii;
+                    x(i) = b(i);
+                    for (int j = 0; j < i - 1; j++)
+                    {
+                        x(i) = x(i) - A(i, j) * x(j);
+                    }
+                    for (int j = i + 1; j < A.rows(); j++)
+                    {
+                        x(i) = x(i) - A(i, j) * x(j);
+                    }
+                    x(i) = x(i) / A(i, i);
+                }
+            }
+        }
     }
 
     /**

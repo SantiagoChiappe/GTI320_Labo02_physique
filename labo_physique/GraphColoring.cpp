@@ -1,3 +1,15 @@
+/**
+ * @file GraphColoring.cpp
+ *
+ * @brief Algorithme glouton pour la coloration de graphe.
+ *
+ * Nom: Erick Santiago Chiappe Reyes
+ * Code permanent : CHIE19079806
+ * Email : erick-santiago.chiappe-reyes.1@ens.etsmtl.ca
+ *
+ */
+
+
 #include "GraphColoring.h"
 #include "ParticleSystem.h"
 
@@ -28,35 +40,14 @@ void GraphColoring::color(ParticleSystem& particleSystem)
     // TODO Construire les partitions qui correspond à chaque couleur. 
     //     Les partitions sont représentées par un tableau d'indices de particules, un pour chaque couleur. 
     //     Stocker les partitions dans m_partitions.
-    /*m_partitions.resize(C.size());
-    int i = 0;
-    for (Particle& p : particles)
-    {
-        auto partition = m_partitions[p.color];
-        partition.push_back(i);
-    }
-
-    Vector<int, Dynamic> count(C.size());
-    for (Particle& p : particles)
-    {
-        count(p.color)++;
-    }
-
     m_partitions.resize(C.size());
     int i = 0;
-    for (auto partition : m_partitions) 
-    {
-        partition.resize(count(i));
-        i++;
-    }
-
-    i = 0;
     for (Particle& p : particles)
     {
-        auto partition = m_partitions[p.color];
+        auto& partition = m_partitions[p.color];
         partition.push_back(i);
-        count(p.color)++;
-    }*/
+        i++;
+    }
 }
 
 int GraphColoring::findColor(const Particle& p, const std::vector<Particle>& particles, const std::vector<Spring>& springs, ColorList& C) const

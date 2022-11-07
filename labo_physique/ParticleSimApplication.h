@@ -6,9 +6,9 @@
  * @brief Partir applicative du laboratoire 3 : contrôle de la simulaiton via
  * l'interface graphique.
  *
- * Nom:
- * Code permanent :
- * Email :
+ * Nom: Erick Santiago Chiappe Reyes
+ * Code permanent : CHIE19079806
+ * Email : erick-santiago.chiappe-reyes.1@ens.etsmtl.ca
  *
  */
 

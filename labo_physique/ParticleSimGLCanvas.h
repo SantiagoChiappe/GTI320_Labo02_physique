@@ -5,9 +5,9 @@
  *
  * @brief Classe Canvas pour l'affichage via OpenGL.
  *
- * Nom:
- * Code permanent :
- * Email :
+ * Nom: Erick Santiago Chiappe Reyes
+ * Code permanent : CHIE19079806
+ * Email : erick-santiago.chiappe-reyes.1@ens.etsmtl.ca
  *
  */
 

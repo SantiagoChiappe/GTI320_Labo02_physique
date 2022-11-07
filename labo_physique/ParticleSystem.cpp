@@ -1,3 +1,14 @@
+/**
+ * @file ParticleSystem.cpp
+ *
+ * @brief Système de particules de type masse-ressort
+ *
+ * Nom: Erick Santiago Chiappe Reyes
+ * Code permanent : CHIE19079806
+ * Email : erick-santiago.chiappe-reyes.1@ens.etsmtl.ca
+ *
+ */
+
 #include "ParticleSystem.h"
 
 using namespace gti320;

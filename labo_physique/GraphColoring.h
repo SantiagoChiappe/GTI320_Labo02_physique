@@ -5,9 +5,9 @@
  *
  * @brief Algorithme glouton pour la coloration de graphe.
  *
- * Nom:
- * Code permanent :
- * Email :
+ * Nom: Erick Santiago Chiappe Reyes
+ * Code permanent : CHIE19079806
+ * Email : erick-santiago.chiappe-reyes.1@ens.etsmtl.ca
  *
  */
 

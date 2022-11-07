@@ -1,3 +1,14 @@
+/**
+ * @file ParticleSimApplication.cpp
+ *
+ * @brief GTI320 Simulation d'un système masse-ressort
+ *
+ * Nom: Erick Santiago Chiappe Reyes
+ * Code permanent : CHIE19079806
+ * Email : erick-santiago.chiappe-reyes.1@ens.etsmtl.ca
+ *
+ */
+
 #include "ParticleSimApplication.h"
 #include "ParticleSimGLCanvas.h"
 
@@ -224,25 +235,40 @@ namespace
 
         particleSystem.clear();
 
-        const int N = 3;
-        const int x_start = 200;
+        const int N = 10 * 3;
+        const int x_start = 300;
+        const int y_start = 500;
         const int dx = 32;
+        const int dy = 32;
 
         int index = 0;
-        for (int j = 0; j < N; ++j)
+        for (int i = 0; i < N/3; ++i)
         {
-            const int x = x_start + j * dx;
-            const int y = 480;
-
-            Particle particle(Vector2f(x, y), Vector2f(0, 0), Vector2f(0, 0), 1.0);
-            particle.fixed = index == 0;
-            particleSystem.addParticle(particle);
-            if (j > 0)
+            for (int j = 0; j < N/3 - i; ++j)
             {
-                Spring s(index - 1, index, k, (float)dx);
-                particleSystem.addSpring(s);
+                const int x = x_start + j * dx + i * (dx/2);
+                const int y = y_start - i * dy;
+
+                Particle particle(Vector2f(x, y), Vector2f(0, 0), Vector2f(0, 0), 1.0);
+                if (j == 0 && i == 0) particle.fixed = true;
+                if (j == (N/3 - 1) && i == 0) particle.fixed = true;
+                particleSystem.addParticle(particle);
+
+                if (i > 0)
+                {
+                    float l0 = std::sqrt((float)dx * dx + (float)dy * dy);
+                    Spring s1(index - N / 3 + (i - 1), index, k, l0);
+                    Spring s2(index - N / 3 + i, index, k, l0);
+                    particleSystem.addSpring(s1);
+                    particleSystem.addSpring(s2);
+                }
+                if (j > 0)
+                {
+                    Spring s(index - 1, index, k, (float)dx);
+                    particleSystem.addSpring(s);
+                }
+                ++index;
             }
-            ++index;
         }
 
     }
