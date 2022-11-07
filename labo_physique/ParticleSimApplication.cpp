@@ -250,8 +250,7 @@ namespace
                 const int y = y_start - i * dy;
 
                 Particle particle(Vector2f(x, y), Vector2f(0, 0), Vector2f(0, 0), 1.0);
-                if (j == 0 && i == 0) particle.fixed = true;
-                if (j == (N/3 - 1) && i == 0) particle.fixed = true;
+                if (index == N) particle.fixed = true;
                 particleSystem.addParticle(particle);
 
                 if (i > 0)
