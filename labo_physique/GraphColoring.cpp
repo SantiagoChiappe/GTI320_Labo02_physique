@@ -40,6 +40,7 @@ void GraphColoring::color(ParticleSystem& particleSystem)
     // TODO Construire les partitions qui correspond à chaque couleur. 
     //     Les partitions sont représentées par un tableau d'indices de particules, un pour chaque couleur. 
     //     Stocker les partitions dans m_partitions.
+    m_partitions.clear();
     m_partitions.resize(C.size());
     int i = 0;
     for (Particle& p : particles)

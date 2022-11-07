@@ -237,7 +237,7 @@ namespace
 
         const int N = 10 * 3;
         const int x_start = 300;
-        const int y_start = 500;
+        const int y_start = 700;
         const int dx = 32;
         const int dy = 32;
 
@@ -250,7 +250,7 @@ namespace
                 const int y = y_start - i * dy;
 
                 Particle particle(Vector2f(x, y), Vector2f(0, 0), Vector2f(0, 0), 1.0);
-                if (index == N) particle.fixed = true;
+                if (j == 0 && i == N/3 - 1) particle.fixed = true;
                 particleSystem.addParticle(particle);
 
                 if (i > 0)
