@@ -29,14 +29,14 @@ namespace gti320
     {
         if ((A * x - b).norm() / b.norm() < eps)
         {
-            return false;
+            return true;
         }
         auto deltaX = x - x_prec;
         if (deltaX.norm() / x.norm() < tau)
         {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -50,27 +50,29 @@ namespace gti320
         //
         // Implémenter la méthode de Gauss-Seidel
 
-        for(int k = 0; k < k_max; k++)
+        bool converged = false;
+
+        while (!converged) 
         {
-            auto x_prec = x;
-
-            for (int i = 0; i < A.rows(); i++)
+            for (int k = 0; k < k_max; k++)
             {
-                x(i) = b(i);
-                for (int j = 0; j < i - 1; j++) 
-                {
-                    x(i) = x(i) - A(i, j) * x(j);
-                }
-                for (int j = i + 1; j < A.rows(); j++)
-                {
-                    x(i) = x(i) - A(i, j) * x(j);
-                }
-                x(i) = x(i) / A(i, i);
-            }
+                auto x_prec = x;
 
-            if (!testConvergence(A, b, x, x_prec))
-            {
-                return;
+                for (int i = 0; i < A.rows(); i++)
+                {
+                    x(i) = b(i);
+                    for (int j = 0; j < i - 1; j++)
+                    {
+                        x(i) = x(i) - A(i, j) * x(j);
+                    }
+                    for (int j = i + 1; j < A.rows(); j++)
+                    {
+                        x(i) = x(i) - A(i, j) * x(j);
+                    }
+                    x(i) = x(i) / A(i, i);
+                }
+
+                converged = testConvergence(A, b, x, x_prec);
             }
         }
     }
@@ -87,27 +89,40 @@ namespace gti320
         // Implémenter la méthode de Gauss-Seidel avec coloration de graphe.
         // Les partitions avec l'index de chaque particule sont stockées dans la table des tables, P.
         
-        for (int c = 0; c < P.size(); ++c) 
-        {
-            const std::vector<int>& inds = P[c];
-            #pragma omp parallel for 
-            for (int k = 0; k < inds.size(); ++k)
-            {
-                // iteration de Gauss-Seidel
+        bool converged = false;
 
-                for (int ii = 0; ii < 2; ii++) 
+        while (!converged) 
+        {
+            for (int max = 0; max < maxIter; max++)
+            {
+                auto x_prec = x;
+
+                for (int c = 0; c < P.size(); ++c)
                 {
-                    int i = inds[k] * 2 + ii;
-                    x(i) = b(i);
-                    for (int j = 0; j < i - 1; j++)
+                    const std::vector<int>& inds = P[c];
+                    #pragma omp parallel for
+
+                    for (int k = 0; k < inds.size(); ++k)
                     {
-                        x(i) = x(i) - A(i, j) * x(j);
+                        // iteration de Gauss-Seidel
+
+                        for (int ii = 0; ii < 2; ii++)
+                        {
+                            int i = inds[k] * 2 + ii;
+                            x(i) = b(i);
+                            for (int j = 0; j < i - 1; j++)
+                            {
+                                x(i) = x(i) - A(i, j) * x(j);
+                            }
+                            for (int j = i + 1; j < A.rows(); j++)
+                            {
+                                x(i) = x(i) - A(i, j) * x(j);
+                            }
+                            x(i) = x(i) / A(i, i);
+                        }
+
+                        converged = testConvergence(A, b, x, x_prec);
                     }
-                    for (int j = i + 1; j < A.rows(); j++)
-                    {
-                        x(i) = x(i) - A(i, j) * x(j);
-                    }
-                    x(i) = x(i) / A(i, i);
                 }
             }
         }
@@ -171,7 +186,7 @@ namespace gti320
         // Remarque : ne pas caculer la transposer de L, c'est inutilement
         // coûteux.
 
-        for (int i = 0; i < A.rows(); i++) 
+        for (int i = A.rows() - 1; i >= 0; i--) 
         {
             x(i) = y(i);
             for (int j = i + 1; j < A.rows(); j++) 
