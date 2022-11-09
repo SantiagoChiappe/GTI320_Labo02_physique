@@ -426,6 +426,20 @@ namespace gti320 {
             }
         }
 
+        /** Sum des matrices */
+        template<typename _OtherScalar>
+        inline void sumMatrix(const Matrix<_OtherScalar, 2, 2> matrix)
+        {
+            assert(matrix.cols() == this->cols() && matrix.rows() == this->rows());
+            for (int j = 0; j < this->cols(); j++)
+            {
+                for (int i = 0; i < this->rows(); i++)
+                {
+                    (*this)(i, j) = (*this)(i, j) + matrix(i, j);
+                }
+            }
+        }
+
         inline int rows() const { return m_rows; }
         inline int cols() const { return m_cols; }
     };

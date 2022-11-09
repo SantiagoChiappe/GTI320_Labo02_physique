@@ -50,30 +50,25 @@ namespace gti320
         //
         // Implémenter la méthode de Gauss-Seidel
 
-        bool converged = false;
-
-        while (!converged) 
+        for (int k = 0; k < k_max; k++)
         {
-            for (int k = 0; k < k_max; k++)
+            auto x_prec = x;
+
+            for (int i = 0; i < A.rows(); i++)
             {
-                auto x_prec = x;
-
-                for (int i = 0; i < A.rows(); i++)
+                x(i) = b(i);
+                for (int j = 0; j < i; j++)
                 {
-                    x(i) = b(i);
-                    for (int j = 0; j < i - 1; j++)
-                    {
-                        x(i) = x(i) - A(i, j) * x(j);
-                    }
-                    for (int j = i + 1; j < A.rows(); j++)
-                    {
-                        x(i) = x(i) - A(i, j) * x(j);
-                    }
-                    x(i) = x(i) / A(i, i);
+                    x(i) = x(i) - A(i, j) * x(j);
                 }
-
-                converged = testConvergence(A, b, x, x_prec);
+                for (int j = i + 1; j < A.rows(); j++)
+                {
+                    x(i) = x(i) - A(i, j) * x(j);
+                }
+                x(i) = x(i) / A(i, i);
             }
+
+            if (testConvergence(A, b, x, x_prec)) return;
         }
     }
     
@@ -110,7 +105,7 @@ namespace gti320
                         {
                             int i = inds[k] * 2 + ii;
                             x(i) = b(i);
-                            for (int j = 0; j < i - 1; j++)
+                            for (int j = 0; j < i; j++)
                             {
                                 x(i) = x(i) - A(i, j) * x(j);
                             }

@@ -173,21 +173,25 @@ void ParticleSystem::buildDfDx(Matrix<float, Dynamic, Dynamic>& dfdx)
         // Astuce: créer une matrice de taille fixe 2 par 2 puis utiliser la classe SubMatrix pour accumuler 
         // les modifications sur la diagonale (2 endroits) et pour mettre à jour les blocs non diagonale (2 endroits).
 
-        auto df_moins = this->MRigid(false, m_particles[spring.index0], m_particles[spring.index1], spring)(0, 0);
-        auto df_plus = this->MRigid(true, m_particles[spring.index0], m_particles[spring.index1], spring)(0, 0);
+        int pos[2] = { spring.index0 * 2 , spring.index1 * 2 };
 
-        int pos1 = spring.index0 * 2;
-        int pos2 = spring.index1 * 2;
+        auto df_moins = this->MRigid(false, m_particles[spring.index0], m_particles[spring.index1], spring);
+        auto df_plus = this->MRigid(true, m_particles[spring.index0], m_particles[spring.index1], spring);
 
-        auto submatrice1 = dfdx.block(pos1, pos1, 2, 2);
-        auto submatrice2 = dfdx.block(pos2, pos1, 2, 2);
-        auto submatrice3 = dfdx.block(pos1, pos2, 2, 2);
-        auto submatrice4 = dfdx.block(pos2, pos2, 2, 2);
+        // df_moins
+        for (int i = 0; i < 2; i++)
+        {
+            auto submatrice = dfdx.block(pos[i], pos[i], 2, 2);
+            submatrice.sumMatrix(df_moins);
+        }
 
-        submatrice1.sumDiagonalValue(df_moins);
-        submatrice2.sumDiagonalValue(df_plus);
-        submatrice3.sumDiagonalValue(df_plus);
-        submatrice4.sumDiagonalValue(df_moins);
+        // df_plus
+        for (int i = 0; i < 2; i++)
+        {
+
+            auto submatrice = dfdx.block(pos[(i + 1) % 2], pos[i], 2, 2);
+            submatrice.sumMatrix(df_plus);
+        }
     }
 }
 
