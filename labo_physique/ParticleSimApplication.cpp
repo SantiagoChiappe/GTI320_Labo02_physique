@@ -566,16 +566,6 @@ void ParticleSimApplication::step(float dt)
     //         Version 2 utilise un seul constructeur et aucune copie
     //////////////////////////////////////////////////////////////////////////////////
     //
-    float fGrav = -9.81f;
-    Vector<float, Dynamic> Mg;
-    Mg.resize(m_M.rows());
-    Mg.setZero();
-    for (int i = 0; i < m_M.rows() / 2; i++)
-    {
-        int pos = i * 2;
-        Mg(pos + 1) = fGrav;
-    }
-
     const Matrix<float, Dynamic, Dynamic> A = m_M + (-(dt * dt) * m_dfdx);
     const Vector<float, Dynamic> b = dt * m_f + m_M * m_v;
 
