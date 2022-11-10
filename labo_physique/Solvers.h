@@ -85,39 +85,37 @@ namespace gti320
         // Les partitions avec l'index de chaque particule sont stockées dans la table des tables, P.
         
         bool converged = false;
-
-        while (!converged) 
+        for (int max = 0; max < maxIter; max++)
         {
-            for (int max = 0; max < maxIter; max++)
+            auto x_prec = x;
+
+            for (int c = 0; c < P.size(); ++c)
             {
-                auto x_prec = x;
+                const std::vector<int>& inds = P[c];
+                #pragma omp parallel for
 
-                for (int c = 0; c < P.size(); ++c)
+                for (int k = 0; k < inds.size(); ++k)
                 {
-                    const std::vector<int>& inds = P[c];
-                    #pragma omp parallel for
+                    if (converged) continue;
 
-                    for (int k = 0; k < inds.size(); ++k)
+                    // iteration de Gauss-Seidel
+
+                    for (int ii = 0; ii < 2; ++ii)
                     {
-                        // iteration de Gauss-Seidel
-
-                        for (int ii = 0; ii < 2; ii++)
+                        int i = inds[k] * 2 + ii;
+                        x(i) = b(i);
+                        for (int j = 0; j < i; ++j)
                         {
-                            int i = inds[k] * 2 + ii;
-                            x(i) = b(i);
-                            for (int j = 0; j < i; j++)
-                            {
-                                x(i) = x(i) - A(i, j) * x(j);
-                            }
-                            for (int j = i + 1; j < A.rows(); j++)
-                            {
-                                x(i) = x(i) - A(i, j) * x(j);
-                            }
-                            x(i) = x(i) / A(i, i);
+                            x(i) = x(i) - A(i, j) * x(j);
                         }
-
-                        converged = testConvergence(A, b, x, x_prec);
+                        for (int j = i + 1; j < A.rows(); ++j)
+                        {
+                            x(i) = x(i) - A(i, j) * x(j);
+                        }
+                        x(i) = x(i) / A(i, i);
                     }
+
+                    converged = testConvergence(A, b, x, x_prec);
                 }
             }
         }
